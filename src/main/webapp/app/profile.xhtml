@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+    <h:head>
+        <title>Sakai | User Profile</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="https://unpkg.com/primeflex@3.3.1/primeflex.css"/>
+        <style>
+            /* <![CDATA[ */
+            :root {
+                --fluid-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            body { 
+                margin: 0; 
+                font-family: 'Inter', sans-serif; 
+                background-color: #fdfcfb;
+                color: #1e293b;
+            }
+
+            /* Consistent Mesh Background */
+            .profile-wrapper {
+                min-height: 100vh;
+                background: radial-gradient(circle at 15% 15%, rgba(195, 220, 250, 0.4), transparent 40%),
+                            radial-gradient(circle at 85% 85%, rgba(226, 209, 195, 0.4), transparent 40%);
+                padding-top: 100px;
+            }
+
+            /* Header from Landing Page */
+            .sticky-header {
+                position: fixed; top: 0; left: 0; width: 100%;
+                background: rgba(255, 255, 255, 0.6) !important; 
+                backdrop-filter: blur(20px);
+                z-index: 1000;
+                height: 75px;
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+
+            /* Glassmorphism Bento Cards */
+            .bento-card {
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(15px);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                border-radius: 24px;
+                box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+                transition: transform 0.4s var(--fluid-bezier);
+            }
+
+            .bento-card:hover {
+                transform: translateY(-5px);
+            }
+
+            /* Custom Styling for the Avatar Container */
+            .avatar-ring {
+                padding: 5px;
+                border: 2px solid #3b82f6;
+                border-radius: 50%;
+                display: inline-block;
+            }
+
+            .input-field-custom .ui-inputfield {
+                background: rgba(255, 255, 255, 0.5) !important;
+                border-radius: 12px !important;
+                padding: 1rem !important;
+                border: 1px solid rgba(0,0,0,0.1) !important;
+                transition: all 0.3s ease;
+            }
+
+            .input-field-custom .ui-inputfield:focus {
+                background: white !important;
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+            }
+
+            .no-underline { text-decoration: none !important; }
+            /* ]]> */
+        </style>
+    </h:head>
+    <h:body>
+        <div class="flex align-items-center justify-content-between px-4 lg:px-8 sticky-header">
+            <p:link href="landing.xhtml" styleClass="flex align-items-center no-underline">
+                <div class="bg-blue-600 border-round-xl flex align-items-center justify-content-center mr-3" style="width:38px;height:38px">
+                    <i class="pi pi-bolt text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-bold text-900 tracking-tight">SAKAI</span>
+            </p:link>
+            <div class="flex align-items-center gap-3">
+                <p:avatar icon="pi pi-user" shape="circle" styleClass="bg-gray-200"/>
+            </div>
+        </div>
+
+        <div class="profile-wrapper px-4 lg:px-8 pb-8">
+            <h:form id="mainForm">
+                <div class="grid">
+                    
+                    <div class="col-12 lg:col-4">
+                        <div class="bento-card p-5 text-center mb-4">
+                            <div class="avatar-ring mb-4">
+                                <p:avatar label="#{userBeanP.currentUser.firstName.substring(0,1)}" 
+                                          size="xlarge" shape="circle" 
+                                          styleClass="bg-blue-600 text-white shadow-4" 
+                                          style="width:110px; height:110px; font-size: 3rem"/>
+                            </div>
+                            
+                            <h2 class="text-900 font-bold mb-1 text-3xl tracking-tight">
+                                #{userBeanP.currentUser.firstName} #{userBeanP.currentUser.lastName}
+                            </h2>
+                            <p class="text-600 font-medium mb-4">#{userBeanP.currentUser.email}</p>
+                            
+                            <div class="flex align-items-center justify-content-center gap-2 mb-5">
+                                <span class="bg-blue-100 text-blue-700 font-bold px-3 py-1 border-round-lg text-xs">
+                                    #{userBeanP.currentUser.userRole}
+                                </span>
+                                <span class="bg-green-100 text-green-700 font-bold px-3 py-1 border-round-lg text-xs uppercase">Verified</span>
+                            </div>
+
+                            <div class="flex flex-column gap-2">
+                                <p:commandButton value="Edit Profile Image" icon="pi pi-camera" styleClass="ui-button-outlined ui-button-secondary border-round-xl"/>
+                                <p:commandButton value="View Activity" icon="pi pi-list" styleClass="ui-button-flat text-700"/>
+                            </div>
+                        </div>
+
+                        <div class="bento-card p-4 bg-gray-900 text-white border-none mb-4">
+                            <div class="flex align-items-center mb-3">
+                                <i class="pi pi-shopping-cart mr-2 text-blue-400"></i>
+                                <span class="font-bold">E-commerce Summary</span>
+                            </div>
+                            <div class="flex justify-content-between text-sm text-gray-400">
+                                <span>Total Orders</span>
+                                <span class="text-white font-bold">12</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 lg:col-8">
+                        <div class="bento-card p-6">
+                            <div class="flex align-items-center justify-content-between mb-6">
+                                <div>
+                                    <h3 class="text-900 font-bold text-3xl mb-1 tracking-tight">Profile Settings</h3>
+                                    <p class="text-600 m-0">Update your personal information and security.</p>
+                                </div>
+                                <i class="pi pi-cog text-4xl text-gray-200"></i>
+                            </div>
+                            
+                            <div class="grid p-fluid">
+                                <div class="field col-12 md:col-6 input-field-custom">
+                                    <p:outputLabel for="fname" value="First Name" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                                    <p:inputText id="fname" value="#{userBeanP.currentUser.firstName}" placeholder="Ezio"/>
+                                </div>
+                                
+                                <div class="field col-12 md:col-6 input-field-custom">
+                                    <p:outputLabel for="lname" value="Last Name" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                                    <p:inputText id="lname" value="#{userBeanP.currentUser.lastName}" placeholder="Auditore"/>
+                                </div>
+
+                                <div class="field col-12 input-field-custom">
+                                    <p:outputLabel for="email" value="Account Email" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                                    <p:inputText id="email" value="#{userBeanP.currentUser.email}" readonly="true" styleClass="opacity-60"/>
+                                </div>
+
+                                <div class="field col-12 mt-4 mb-4">
+                                    <div class="surface-100 p-4 border-round-2xl border-1 border-200 flex align-items-center justify-content-between">
+                                        <div class="flex align-items-center">
+                                            <div class="bg-blue-600 border-round-lg p-2 mr-3">
+                                                <i class="pi pi-shield text-white"></i>
+                                            </div>
+                                            <div>
+                                                <span class="block font-bold text-900">Two-Factor Authentication</span>
+                                                <span class="text-sm text-600">Secure your account with 2FA.</span>
+                                            </div>
+                                        </div>
+                                        <p:toggleSwitch  />
+                                    </div>
+                                </div>
+
+                                <div class="field col-12 md:col-6 input-field-custom">
+                                    <p:outputLabel for="pwd" value="Update Password" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                                    <p:password id="pwd" feedback="false" toggleMask="true" placeholder="••••••••"/>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-column sm:flex-row justify-content-end mt-6 gap-3">
+                                <p:commandButton value="Discard" styleClass="ui-button-flat text-700 font-bold p-3"/>
+                                <p:commandButton value="Save Profile" 
+                                                 action="#{userBeanP.updateProfile}" 
+                                                 icon="pi pi-check-circle" 
+                                                 styleClass="bg-blue-600 border-none px-6 py-3 font-bold border-round-xl shadow-4"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </h:form>
+        </div>
+    </h:body>
+</html>

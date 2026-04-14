@@ -44,7 +44,7 @@ public class LoginBean {
             if (!externalContext.isResponseCommitted()) {
                 try {
                     // It didn't, so we redirect to the default dashboard
-                    externalContext.redirect(externalContext.getRequestContextPath() + "/app/users.xhtml");
+                    externalContext.redirect(externalContext.getRequestContextPath() + "/app/profile.xhtml");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

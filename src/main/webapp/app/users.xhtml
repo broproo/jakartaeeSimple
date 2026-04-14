@@ -8,8 +8,14 @@
     <h:head>
         <title>User Management - PrimeFaces 15</title>
         <style>
-            .field { margin-bottom: 1rem; }
-            .field label { display: block; font-weight: bold; margin-bottom: .5rem; }
+            .field {
+                margin-bottom: 1rem;
+            }
+            .field label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: .5rem;
+            }
         </style>
     </h:head>
 
@@ -33,17 +39,17 @@
                 <p:dataTable id="dt-users" widgetVar="dtUsers" var="user" value="#{userBean.usersList}"
                              reflow="true" paginator="true" rows="10" selectionMode="single"
                              rowKey="#{user.userId}" paginatorPosition="bottom">
-                    
+
                     <f:facet name="header">Manage Users</f:facet>
 
                     <p:column headerText="ID" width="50">
                         <h:outputText value="#{user.userId}" />
                     </p:column>
-                    
+
                     <p:column headerText="Email" sortBy="#{user.email}" filterBy="#{user.email}">
                         <h:outputText value="#{user.email}" />
                     </p:column>
-                    
+
                     <p:column headerText="Full Name">
                         <h:outputText value="#{user.firstName} #{user.lastName}" />
                     </p:column>
@@ -53,13 +59,19 @@
                     </p:column>
 
                     <p:column headerText="Actions" exportable="false" width="120">
+                        <p:commandButton icon="pi pi-eye" update=":dialogs:view-user-content"
+                                         oncomplete="PF('viewUserDialog').show()"
+                                         styleClass="rounded-button ui-button-info" 
+                                         process="@this" style="margin-right: .5rem">
+                            <f:setPropertyActionListener value="#{user}" target="#{userBean.selectedUser}" />
+                        </p:commandButton>
                         <p:commandButton icon="pi pi-pencil" update=":dialogs:manage-user-content"
                                          oncomplete="PF('manageUserDialog').show()"
                                          styleClass="edit-button rounded-button ui-button-success" process="@this">
                             <f:setPropertyActionListener value="#{user}" target="#{userBean.selectedUser}" />
                             <p:resetInput target=":dialogs:manage-user-content" />
                         </p:commandButton>
-                        
+
                         <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" 
                                          process="@this" oncomplete="PF('deleteUserDialog').show()"
                                          style="margin-left: .5rem">
@@ -72,22 +84,22 @@
             <h:form id="dialogs">
                 <p:dialog header="User Details" showEffect="fade" modal="true" 
                           widgetVar="manageUserDialog" responsive="true" width="450">
-                    
+
                     <p:outputPanel id="manage-user-content" class="ui-fluid">
                         <p:outputPanel rendered="#{not empty userBean.selectedUser}">
-                            
+
                             <div class="field">
                                 <p:outputLabel for="email">Email</p:outputLabel>
                                 <p:inputText id="email" value="#{userBean.selectedUser.email}" required="true" />
                             </div>
-                            
+
                             <div class="field">
                                 <p:outputLabel for="password">Password</p:outputLabel>
                                 <p:password id="password" value="#{userBean.selectedUser.passwordHash}" 
                                             required="#{userBean.selectedUser.userId == null}" 
                                             toggleMask="true" redisplay="true"/>
                             </div>
-                            
+
                             <div class="field">
                                 <p:outputLabel for="firstName">First Name</p:outputLabel>
                                 <p:inputText id="firstName" value="#{userBean.selectedUser.firstName}" />
@@ -122,17 +134,47 @@
 
                 <p:confirmDialog widgetVar="deleteUserDialog" showEffect="fade" width="300"
                                  message="Delete this user permanently?" header="Confirm Delete" severity="warn">
-                    
+
                     <p:commandButton value="Yes, Delete" icon="pi pi-check" 
                                      actionListener="#{userBean.deleteUser}"
                                      process="@this" 
                                      update=":form:dt-users :form:messages" 
                                      oncomplete="PF('deleteUserDialog').hide()" />
-                    
+
                     <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
                                      onclick="PF('deleteUserDialog').hide()" />
                 </p:confirmDialog>
+                 <p:dialog header="User Information" widgetVar="viewUserDialog" modal="true" 
+                  showEffect="fade" responsive="true" width="400">
+            <p:outputPanel id="view-user-content" class="ui-fluid">
+                <p:panelGrid columns="2" rendered="#{not empty userBean.selectedUser}" 
+                             columnClasses="font-bold, empty" layout="grid" styleClass="ui-panelgrid-blank">
+
+                    <h:outputText value="User ID:" />
+                    <h:outputText value="#{userBean.selectedUser.userId}" />
+
+                    <h:outputText value="Email:" />
+                    <h:outputText value="#{userBean.selectedUser.email}" />
+
+                    <h:outputText value="First Name:" />
+                    <h:outputText value="#{userBean.selectedUser.firstName}" />
+
+                    <h:outputText value="Last Name:" />
+                    <h:outputText value="#{userBean.selectedUser.lastName}" />
+
+                    <h:outputText value="Role:" />
+                    <p:tag value="#{userBean.selectedUser.userRole}" severity="info" />
+
+                </p:panelGrid>
+            </p:outputPanel>
+            <f:facet name="footer">
+                <p:commandButton value="Close" icon="pi pi-times" 
+                                 onclick="PF('viewUserDialog').hide()" 
+                                 type="button" class="ui-button-secondary" />
+            </f:facet>
+        </p:dialog>
             </h:form>
         </div>
+       
     </h:body>
 </html>

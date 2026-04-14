@@ -6,192 +6,366 @@
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
-        <title>Sakai Landing | Fixed Glass Header</title>
+        <title>Sakai-App | The Commerce Engine</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         
         <link rel="stylesheet" href="https://unpkg.com/primeflex@3.3.1/primeflex.css"/>
 
         <style>
-            html { scroll-behavior: smooth; }
-            body { 
-                margin: 0; 
-                font-family: var(--font-family); 
-                background-color: var(--surface-ground); 
-                color: var(--text-color);
+            /* <![CDATA[ */
+            :root {
+                --fluid-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
-            /* Fixed Header with Blur Effect */
+            html { scroll-behavior: smooth; overflow-x: hidden; }
+            
+            body { 
+                margin: 0; 
+                font-family: var(--font-family, 'Inter', sans-serif); 
+                background-color: var(--surface-ground); 
+                color: var(--text-color);
+                -webkit-font-smoothing: antialiased;
+                overflow-x: hidden;
+            }
+
+            /* --- HEADER & NAVIGATION --- */
             .sticky-header {
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
-                background-color: rgba(255, 255, 255, 0.7) !important; 
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
+                background-color: rgba(255, 255, 255, 0.4) !important; 
+                backdrop-filter: blur(20px) saturate(200%);
+                -webkit-backdrop-filter: blur(20px) saturate(200%);
                 z-index: 1000;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-                height: 70px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                height: 80px;
+                transition: all 0.4s var(--fluid-bezier);
             }
 
-            .landing-wrapper {
-                padding-top: 70px; /* Offset for fixed header */
+            .sticky-header.scrolled {
+                height: 65px;
+                background-color: rgba(255, 255, 255, 0.85) !important;
+                box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+            }
+
+            /* --- RIGHT-ALIGNED MOBILE SIDEBAR --- */
+            .mobile-sidebar {
+                position: fixed;
+                top: 0;
+                right: -100%; /* Start off-screen to the right */
+                width: 280px;
+                height: 100vh;
+                background: white;
+                z-index: 1100;
+                transition: right 0.4s var(--fluid-bezier); /* Transition right property */
+                box-shadow: -20px 0 50px rgba(0,0,0,0.1);
+            }
+
+            .mobile-sidebar.active {
+                right: 0; /* Slide in from right */
+            }
+
+            .menu-mask {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.3);
+                backdrop-filter: blur(4px);
+                z-index: 1050;
+                display: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .menu-mask.active {
+                display: block;
+                opacity: 1;
+            }
+
+            body.menu-open {
+                overflow: hidden;
+            }
+
+            /* --- HERO & COMPONENTS --- */
+            .hero-mesh {
+                position: relative;
+                background: radial-gradient(circle at 15% 50%, rgba(195, 220, 250, 0.4), transparent 50%),
+                            radial-gradient(circle at 85% 30%, rgba(226, 209, 195, 0.4), transparent 50%);
+                background-color: #fdfcfb;
+                overflow: hidden;
+                padding: 12rem 2rem 6rem 2rem;
+            }
+
+            .hero-mesh::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: 
+                    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+                background-size: 40px 40px;
+                z-index: 0;
+                mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+                -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            }
+
+            .hero-dashboard-mockup {
+                position: relative;
+                z-index: 2;
+                margin-top: 4rem;
+                background: rgba(255, 255, 255, 0.7);
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                border-radius: 24px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+                transform: perspective(1000px) rotateX(4deg) translateY(0);
+                transition: transform 0.8s var(--fluid-bezier);
+            }
+            .hero-dashboard-mockup:hover {
+                transform: perspective(1000px) rotateX(0deg) translateY(-10px);
+            }
+
+            .bento-card {
+                background: white;
+                border-radius: 24px;
+                padding: 2.5rem;
+                height: 100%;
+                border: 1px solid rgba(0,0,0,0.05);
+                transition: all 0.4s var(--fluid-bezier);
+                position: relative;
                 overflow: hidden;
             }
             
-            #hero {
-                background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), 
-                            radial-gradient(77.36% 256.97% at 77.36% 57.52%, #EFE1AF 0%, #C3DCFA 100%);
-                padding: 8rem 2rem;
+            .bento-card:hover {
+                transform: translateY(-8px) scale(1.01);
+                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+                border-color: rgba(59, 130, 246, 0.3);
             }
-            
-            .feature-card {
-                transition: all 0.3s ease;
-                border: 1px solid transparent;
+
+            .reveal {
+                opacity: 0;
+                transform: translateY(40px);
+                transition: all 0.8s var(--fluid-bezier);
             }
-            .feature-card:hover { 
-                transform: translateY(-8px); 
-                border-color: var(--blue-400);
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0);
             }
-            
+            .delay-1 { transition-delay: 0.1s; }
+            .delay-2 { transition-delay: 0.2s; }
+            .delay-3 { transition-delay: 0.3s; }
+
             .no-underline { text-decoration: none !important; }
+            .btn-fluid { transition: all 0.3s var(--fluid-bezier) !important; }
+            .btn-fluid:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.4) !important;
+            }
+            /* ]]> */
         </style>
     </h:head>
 
     <h:body>
-        <div class="flex align-items-center justify-content-between px-4 lg:px-6 sticky-header">
+        <div id="mobile-mask" class="menu-mask" onclick="toggleMobileMenu()"></div>
+        <div id="mobile-sidebar" class="mobile-sidebar p-5 flex flex-column">
+            <div class="flex align-items-center justify-content-between mb-5">
+                <p:commandButton icon="pi pi-times" styleClass="ui-button-rounded ui-button-flat text-900" 
+                                 type="button" onclick="toggleMobileMenu()"/>
+                <span class="text-2xl font-bold text-900 tracking-tight">SAKAI</span>
+            </div>
+            <div class="flex flex-column gap-2 text-right">
+                <p:link href="#hero" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline hover:text-blue-600 border-bottom-1 border-100">Platform</p:link>
+                <p:link href="#features" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline hover:text-blue-600 border-bottom-1 border-100">Stack</p:link>
+                <p:link href="#deploy" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline hover:text-blue-600 border-bottom-1 border-100">Deploy</p:link>
+            </div>
+            <div class="mt-auto flex flex-column gap-3">
+                <p:button value="Sign In" icon="pi pi-lock" styleClass="ui-button-outlined w-full p-3 font-bold text-900" outcome="login"/>
+                <p:commandButton value="Start Project" styleClass="w-full p-3 font-bold bg-gray-900 border-none text-white"/>
+            </div>
+        </div>
+
+        <div id="main-header" class="flex align-items-center justify-content-between px-4 lg:px-8 sticky-header">
             <div class="flex align-items-center">
-                <div class="bg-blue-600 border-round flex align-items-center justify-content-center mr-2 shadow-2" style="width:38px;height:38px">
+                <div class="bg-blue-600 border-round-xl flex align-items-center justify-content-center mr-3 shadow-4" style="width:42px;height:42px">
                     <i class="pi pi-bolt text-white text-xl"></i>
                 </div>
                 <span class="text-2xl font-bold text-900 tracking-tight">SAKAI</span>
             </div>
             
-            <div class="hidden lg:flex align-items-center">
-                <p:link href="#hero" styleClass="p-3 font-medium text-900 no-underline hover:text-blue-600">Home</p:link>
-                <p:link href="#features" styleClass="p-3 font-medium text-900 no-underline hover:text-blue-600">Features</p:link>
-                <p:link href="#pricing" styleClass="p-3 font-medium text-900 no-underline hover:text-blue-600">Pricing</p:link>
-                <p:button value="Login" icon="pi pi-user" styleClass="ui-button-flat ml-4 font-bold text-900" outcome="login"/>
-                <p:commandButton value="Register" styleClass="ml-2 font-bold shadow-2 border-round-xl"/>
-                
+            <div class="hidden lg:flex align-items-center gap-2">
+                <p:link href="#hero" styleClass="p-3 font-semibold text-700 no-underline hover:text-blue-600 transition-colors">Platform</p:link>
+                <p:link href="#features" styleClass="p-3 font-semibold text-700 no-underline hover:text-blue-600 transition-colors">Stack</p:link>
+                <p:link href="#deploy" styleClass="p-3 font-semibold text-700 no-underline hover:text-blue-600 transition-colors">Deploy</p:link>
+                <p:button value="Sign In" icon="pi pi-lock" styleClass="ui-button-flat ml-4 font-bold text-900 btn-fluid" outcome="login"/>
+                <p:commandButton value="Start Project" styleClass="ml-2 font-bold shadow-4 border-round-xl btn-fluid bg-gray-900 border-none text-white hover:bg-gray-800"/>
             </div>
 
-            <div class="flex lg:hidden">
-                <p:commandButton icon="pi pi-bars" type="button" onclick="PF('sidebarMenu').show()" 
-                                 styleClass="ui-button-flat text-900"/>
+            <div class="lg:hidden">
+                <p:commandButton icon="pi pi-bars" type="button" onclick="toggleMobileMenu()"
+                                 styleClass="ui-button-rounded ui-button-flat text-900 text-2xl"/>
             </div>
         </div>
 
         <div class="landing-wrapper">
-            
-            <p:sidebar widgetVar="sidebarMenu" position="right" styleClass="w-20rem">
-                <div class="flex flex-column h-full">
-                    <div class="flex align-items-center justify-content-between px-4 pt-3 pb-5">
-                        <span class="text-xl font-bold text-blue-600">MENU</span>
-                        
+            <div id="hero" class="hero-mesh flex flex-column align-items-center justify-content-center text-center">
+                <div class="relative z-2 max-w-50rem mx-auto">
+                    <div class="reveal active inline-flex align-items-center px-4 py-2 mb-5 border-round-3xl bg-white shadow-2 border-1 border-gray-200">
+                        <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 border-round-lg text-xs mr-2">v8.0</span>
+                        <span class="text-700 font-medium text-sm">GlassFish Optimized Engine</span>
                     </div>
                     
-                    <nav class="flex flex-column gap-2 px-3">
-                        <p:link href="#hero" onclick="PF('sidebarMenu').hide()" styleClass="p-4 font-medium text-900 block hover:surface-100 border-round no-underline">
-                            <i class="pi pi-home mr-3 text-blue-500"></i> Home
-                        </p:link>
-                        <p:link href="#features" onclick="PF('sidebarMenu').hide()" styleClass="p-4 font-medium text-900 block hover:surface-100 border-round no-underline">
-                            <i class="pi pi-bolt mr-3 text-blue-500"></i> Features
-                        </p:link>
-                        <p:link href="#pricing" onclick="PF('sidebarMenu').hide()" styleClass="p-4 font-medium text-900 block hover:surface-100 border-round no-underline">
-                            <i class="pi pi-tag mr-3 text-blue-500"></i> Pricing
-                        </p:link>
-                        <hr class="my-3 border-top-1 border-surface-200" />
-                        <p:commandButton value="Login" styleClass="ui-button-outlined w-full mb-3 py-3"/>
-                        <p:commandButton value="Register Account" styleClass="w-full shadow-2 py-3"/>
-                    </nav>
+                    <h1 class="reveal active delay-1 text-6xl md:text-8xl font-bold mb-4 text-900 line-height-1 tracking-tighter">
+                        The Commerce UI for <br/><span class="text-blue-600">Jakarta EE.</span>
+                    </h1>
+                    
+                    <p class="reveal active delay-2 text-xl md:text-2xl text-600 mb-6 px-4 line-height-3 max-w-40rem mx-auto">
+                        A fluid, PrimeFaces-powered interface engineered for high-performance e-commerce schemas and secure endpoints.
+                    </p>
+                    
+                    <div class="reveal active delay-3 flex flex-column md:flex-row justify-content-center gap-4">
+                        <p:commandButton value="View Components" icon="pi pi-compass" styleClass="p-4 text-lg font-bold shadow-6 border-round-2xl btn-fluid bg-blue-600 border-none"/>
+                        <p:commandButton value="Read Documentation" icon="pi pi-github" styleClass="p-4 text-lg font-bold ui-button-outlined bg-white border-round-2xl btn-fluid text-900 border-gray-300"/>
+                    </div>
                 </div>
-            </p:sidebar>
 
-            <div id="hero" class="flex flex-column align-items-center justify-content-center text-center">
-                <div class="inline-flex align-items-center px-3 py-1 mb-4 border-round-2xl bg-white-alpha-60 shadow-1">
-                    <span class="text-blue-700 font-bold mr-2">New</span>
-                    <span class="text-700">PrimeFaces 15 support is live</span>
-                </div>
-                <h1 class="text-5xl md:text-8xl font-bold mb-4 text-900 line-height-1">Enterprise Apps <br/><span class="text-blue-600">Simplified.</span></h1>
-                <p class="text-xl md:text-2xl text-700 mb-6 px-4 max-w-30rem mx-auto line-height-3">
-                    Modern UI components for Jakarta EE. Scalable, responsive, and easy to customize.
-                </p>
-                <div class="flex flex-column md:flex-row gap-3">
-                    <p:commandButton value="Get Started Now" icon="pi pi-rocket" styleClass="p-4 text-xl font-bold shadow-4 border-round-xl"/>
-                    <p:commandButton value="View Source" icon="pi pi-github" styleClass="p-4 text-xl font-bold ui-button-outlined bg-white-alpha-90 border-round-xl"/>
+                <div class="reveal active delay-3 hero-dashboard-mockup w-11 md:w-9 lg:w-8 h-20rem md:h-30rem flex flex-column overflow-hidden">
+                    <div class="surface-100 border-bottom-1 border-300 px-4 py-3 flex align-items-center gap-2">
+                        <div class="border-circle bg-red-400" style="width: 12px; height: 12px;"></div>
+                        <div class="border-circle bg-yellow-400" style="width: 12px; height: 12px;"></div>
+                        <div class="border-circle bg-green-400" style="width: 12px; height: 12px;"></div>
+                    </div>
+                    <div class="flex-1 bg-white p-4 lg:p-6 flex gap-4">
+                        <div class="w-2 border-round-xl surface-100 hidden md:block"></div>
+                        <div class="flex-1 flex flex-column gap-4">
+                            <div class="h-4rem border-round-xl surface-50 border-1 border-200"></div>
+                            <div class="flex-1 border-round-xl surface-50 border-1 border-200"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="features" class="py-8 px-4 lg:px-8 surface-section">
-                <div class="text-center mb-8">
-                    <h2 class="text-900 text-4xl font-bold mb-3">Designed for Developers</h2>
-                    <p class="text-600 text-xl line-height-3">Sakai-inspired design meets PrimeFaces power.</p>
+            <div id="features" class="py-8 px-4 lg:px-8 surface-ground relative z-2">
+                <div class="text-center mb-8 reveal">
+                    <h2 class="text-900 text-5xl font-bold mb-3 tracking-tight">Enterprise Architecture</h2>
+                    <p class="text-600 text-xl line-height-3">Everything you need to build the com.bro.ecom ecosystem.</p>
                 </div>
 
-                <div class="grid">
-                    <div class="col-12 md:col-6 lg:col-4 p-4">
-                        <div class="p-5 shadow-2 border-round-xl surface-card h-full feature-card">
-                            <div class="flex align-items-center justify-content-center bg-blue-100 border-round-lg mb-4" style="width:60px;height:60px">
+                <div class="grid grid-nogutter gap-4 max-w-70rem mx-auto">
+                    <div class="col-12 md:col-7 reveal">
+                        <div class="bento-card">
+                            <div class="flex align-items-center justify-content-center bg-blue-50 border-round-2xl mb-5" style="width:60px;height:60px">
                                 <i class="pi pi-shield text-3xl text-blue-600"></i>
                             </div>
-                            <h3 class="text-900 text-2xl font-bold mb-3">Jakarta Security</h3>
-                            <p class="text-600 line-height-3">Seamless integration with modern authentication and authorization patterns.</p>
+                            <h3 class="text-900 text-3xl font-bold mb-3">Jakarta Security APIs</h3>
+                            <p class="text-600 line-height-3 text-lg mb-0">
+                                RESTful endpoints secured by design. Native integration with modern hashing interfaces.
+                            </p>
                         </div>
                     </div>
                     
-                    <div class="col-12 md:col-6 lg:col-4 p-4">
-                        <div class="p-5 shadow-2 border-round-xl surface-card h-full feature-card">
-                            <div class="flex align-items-center justify-content-center bg-green-100 border-round-lg mb-4" style="width:60px;height:60px">
-                                <i class="pi pi-chart-line text-3xl text-green-600"></i>
+                    <div class="col-12 md:col flex-grow-1 reveal delay-1">
+                        <div class="bento-card surface-900 text-white border-none">
+                            <div class="flex align-items-center justify-content-center bg-white-alpha-10 border-round-2xl mb-5" style="width:60px;height:60px">
+                                <i class="pi pi-database text-3xl text-blue-300"></i>
                             </div>
-                            <h3 class="text-900 text-2xl font-bold mb-3">PrimeFlex Grid</h3>
-                            <p class="text-600 line-height-3">Control your layout with zero CSS files using intuitive utility-first classes.</p>
+                            <h3 class="text-white text-2xl font-bold mb-3">Derby Persistence</h3>
+                            <p class="text-gray-400 line-height-3 text-lg mb-0">
+                                Pre-configured JPA EntityManagers for advanced Apache Derby schemas.
+                            </p>
                         </div>
                     </div>
 
-                    <div class="col-12 lg:col-4 p-4">
-                        <div class="p-5 shadow-2 border-round-xl surface-card h-full feature-card">
-                            <div class="flex align-items-center justify-content-center bg-orange-100 border-round-lg mb-4" style="width:60px;height:60px">
-                                <i class="pi pi-refresh text-3xl text-orange-600"></i>
+                    <div class="col-12 md:col flex-grow-1 reveal delay-1">
+                        <div class="bento-card bg-blue-600 text-white border-none">
+                            <div class="flex align-items-center justify-content-center bg-white-alpha-20 border-round-2xl mb-5" style="width:60px;height:60px">
+                                <i class="pi pi-box text-3xl text-white"></i>
                             </div>
-                            <h3 class="text-900 text-2xl font-bold mb-3">AJAX Powered</h3>
-                            <p class="text-600 line-height-3">Ultra-fast partial page updates without annoying browser refreshes.</p>
+                            <h3 class="text-white text-2xl font-bold mb-3">Container Ready</h3>
+                            <p class="text-blue-100 line-height-3 text-lg mb-0">
+                                Built for local NetBeans debugging or Dockerized environments.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-12 md:col-7 reveal delay-2">
+                        <div class="bento-card">
+                            <div class="flex align-items-center justify-content-center bg-orange-50 border-round-2xl mb-5" style="width:60px;height:60px">
+                                <i class="pi pi-bolt text-3xl text-orange-500"></i>
+                            </div>
+                            <h3 class="text-900 text-3xl font-bold mb-3">PrimeFlex 3.3 Engine</h3>
+                            <p class="text-600 line-height-3 text-lg mb-0">
+                                Achieve absolute layout fluidity. Discard heavy custom CSS for responsive utility classes.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="bg-gray-900 text-gray-100 py-8 px-4 lg:px-8">
-                <div class="grid">
-                    <div class="col-12 md:col-6">
-                        <div class="flex align-items-center mb-4">
-                            <div class="bg-blue-600 border-round flex align-items-center justify-content-center mr-2 shadow-2" style="width:30px;height:30px">
-                                <i class="pi pi-bolt text-white"></i>
-                            </div>
-                            <span class="text-xl font-bold tracking-tight text-white">SAKAI-APP</span>
-                        </div>
-                        <p class="text-gray-400 line-height-3 max-w-20rem">Bringing professional design standards to the Java ecosystem since 2026.</p>
-                    </div>
-                    <div class="col-12 md:col-6 text-center md:text-right flex align-items-center justify-content-center md:justify-content-end gap-4 mt-5 md:mt-0">
-                        <p:link href="#" styleClass="no-underline text-gray-400 hover:text-white transition-colors">
-                            <i class="pi pi-github text-4xl"></i>
-                        </p:link>
-                        <p:link href="#" styleClass="no-underline text-gray-400 hover:text-white transition-colors">
-                            <i class="pi pi-twitter text-4xl"></i>
-                        </p:link>
-                    </div>
+                <div class="flex flex-column align-items-center justify-content-center text-center mb-8 reveal">
+                    <h2 class="text-4xl font-bold text-white mb-4">Ready to push to production?</h2>
+                    <p:commandButton value="Migrate to GitHub" icon="pi pi-github" styleClass="p-4 text-lg font-bold bg-white text-900 border-none border-round-xl btn-fluid"/>
                 </div>
-                <hr class="my-6 border-top-1 border-gray-800"/>
+                
+                <hr class="mb-6 border-top-1 border-gray-800"/>
+                
                 <div class="flex flex-column md:flex-row justify-content-between align-items-center text-gray-500 text-sm">
-                    <span>© 2026 Bro-Ecom. All rights reserved.</span>
-                    <div class="flex gap-4 mt-4 md:mt-0">
-                        <p:link value="Terms of Service" href="#" styleClass="text-gray-500 no-underline hover:text-gray-300"/>
-                        <p:link value="Privacy Policy" href="#" styleClass="text-gray-500 no-underline hover:text-gray-300"/>
+                    <div class="flex align-items-center mb-3 md:mb-0">
+                        <div class="bg-blue-600 border-round flex align-items-center justify-content-center mr-2" style="width:24px;height:24px">
+                            <i class="pi pi-bolt text-xs text-white"></i>
+                        </div>
+                        <span class="font-bold text-white uppercase tracking-wider">Sakai-App</span>
                     </div>
+                    <span>© 2026 Bro-Ecom Infrastructure. All rights reserved.</span>
                 </div>
             </div>
-
         </div>
+
+        <script>
+            function toggleMobileMenu() {
+                const sidebar = document.getElementById('mobile-sidebar');
+                const mask = document.getElementById('mobile-mask');
+                const body = document.body;
+
+                sidebar.classList.toggle('active');
+                mask.classList.toggle('active');
+                body.classList.toggle('menu-open');
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                // Sticky Header Logic
+                window.addEventListener('scroll', function() {
+                    const header = document.getElementById('main-header');
+                    if (window.scrollY > 50) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                });
+
+                // Scroll Reveal Logic
+                const revealElements = document.querySelectorAll('.reveal:not(.active)');
+                const revealOptions = {
+                    threshold: 0.15,
+                    rootMargin: "0px 0px -50px 0px"
+                };
+
+                const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, revealOptions);
+
+                revealElements.forEach(el => {
+                    revealOnScroll.observe(el);
+                });
+            });
+        </script>
     </h:body>
 </html>

@@ -106,13 +106,13 @@
                             </div>
                             
                             <h2 class="text-900 font-bold mb-1 text-3xl tracking-tight">
-                                #{userBeanP.currentUser.firstName} #{userBeanP.currentUser.lastName}
+                                #{userSession.currentUser.firstName} #{userSession.currentUser.lastName}
                             </h2>
-                            <p class="text-600 font-medium mb-4">#{userBeanP.currentUser.email}</p>
+                            <p class="text-600 font-medium mb-4">#{userSession.currentUser.email}</p>
                             
                             <div class="flex align-items-center justify-content-center gap-2 mb-5">
                                 <span class="bg-blue-100 text-blue-700 font-bold px-3 py-1 border-round-lg text-xs">
-                                    #{userBeanP.currentUser.userRole}
+                                    #{userSession.currentUser.userRole}
                                 </span>
                                 <span class="bg-green-100 text-green-700 font-bold px-3 py-1 border-round-lg text-xs uppercase">Verified</span>
                             </div>
@@ -148,17 +148,17 @@
                             <div class="grid p-fluid">
                                 <div class="field col-12 md:col-6 input-field-custom">
                                     <p:outputLabel for="fname" value="First Name" styleClass="text-sm font-bold text-700 mb-2 block"/>
-                                    <p:inputText id="fname" value="#{userBeanP.currentUser.firstName}" placeholder="Ezio"/>
+                                    <p:inputText id="fname" value="#{userSession.currentUser.firstName}" placeholder="Ezio"/>
                                 </div>
                                 
                                 <div class="field col-12 md:col-6 input-field-custom">
                                     <p:outputLabel for="lname" value="Last Name" styleClass="text-sm font-bold text-700 mb-2 block"/>
-                                    <p:inputText id="lname" value="#{userBeanP.currentUser.lastName}" placeholder="Auditore"/>
+                                    <p:inputText id="lname" value="#{userSession.currentUser.lastName}" placeholder="Auditore"/>
                                 </div>
 
                                 <div class="field col-12 input-field-custom">
                                     <p:outputLabel for="email" value="Account Email" styleClass="text-sm font-bold text-700 mb-2 block"/>
-                                    <p:inputText id="email" value="#{userBeanP.currentUser.email}" readonly="true" styleClass="opacity-60"/>
+                                    <p:inputText id="email" value="#{userSession.currentUser.email}" readonly="true" styleClass="opacity-60"/>
                                 </div>
 
                                 <div class="field col-12 mt-4 mb-4">

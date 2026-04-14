@@ -15,6 +15,13 @@ public class UserService {
     public List<Users> findAll() {
         return em.createNamedQuery("Users.findAll", Users.class).getResultList();
     }
+    public Users findByEmail(String email) {
+    List<Users> results = em.createNamedQuery("Users.findByEmail", Users.class)
+                            .setParameter("email", email) // Don't forget to bind the parameter!
+                            .getResultList();
+    
+    return results.isEmpty() ? null : results.get(0);
+}
 
     public void save(Users user) {
         if (user.getUserId() == null) {

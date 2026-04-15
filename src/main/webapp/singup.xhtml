@@ -1,0 +1,240 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Sakai | Create Account</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="https://unpkg.com/primeflex@3.3.1/primeflex.css"/>
+
+        <style>
+            /* <![CDATA[ */
+            :root {
+                --fluid-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
+            }
+
+            body {
+                margin: 0;
+                font-family: 'Inter', sans-serif;
+                background-color: var(--surface-card);
+                overflow: hidden; 
+            }
+
+            /* --- LEFT SIDE: BRANDING & GLASS ORBS --- */
+            .brand-section {
+                background: linear-gradient(-45deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
+                background-size: 400% 400%;
+                animation: gradientBG 15s ease infinite;
+                position: relative;
+                overflow: hidden;
+            }
+
+            @keyframes gradientBG {
+                0% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+                100% { background-position: 0% 50%; }
+            }
+
+            .glass-orb {
+                position: absolute;
+                border-radius: 50%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                animation: float 8s ease-in-out infinite;
+            }
+
+            .orb-1 { width: 350px; height: 350px; top: -100px; left: -100px; }
+            .orb-2 { width: 500px; height: 500px; bottom: -150px; right: -100px; animation-delay: -4s; }
+
+            @keyframes float {
+                0%, 100% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-40px) rotate(10deg); }
+            }
+
+            .form-container {
+                animation: slideIn 0.8s var(--fluid-bezier);
+            }
+
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateX(40px); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+
+            /* --- INPUT STYLING --- */
+            /* Standard InputFields */
+            .input-field-custom .ui-inputfield {
+                background: #f8fafc !important;
+                border-radius: 12px !important;
+                padding: 0.75rem 1rem !important;
+                border: 1px solid #e2e8f0 !important;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+            /* Specific fix for SelectOneMenu to prevent double rendering */
+            .input-field-custom .ui-selectonemenu {
+                width: 100% !important;
+                height: 53px !important;
+                background: transparent !important;
+                border: none !important; /* Removes the outer box */
+                display: flex;
+                align-items: center;
+            }
+
+            .input-field-custom .ui-selectonemenu .ui-selectonemenu-label {
+                background: #f8fafc !important;
+                border-radius: 12px !important;
+                padding: 0.75rem 1rem !important;
+                border: 1px solid #e2e8f0 !important;
+                transition: all 0.3s ease;
+                height: 100%;
+                display: flex;
+                align-items: center;
+            }
+
+            /* Hover and Focus Logic */
+            .input-field-custom .ui-inputfield:hover,
+            .input-field-custom .ui-selectonemenu:hover .ui-selectonemenu-label {
+                border-color: #cbd5e1 !important;
+            }
+
+            .input-field-custom .ui-state-focus,
+            .input-field-custom .ui-selectonemenu.ui-state-focus .ui-selectonemenu-label {
+                background: white !important;
+                border-color: #3b82f6 !important;
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+            }
+
+            .input-field-custom .ui-selectonemenu .ui-selectonemenu-trigger {
+                background: transparent !important;
+                border: none !important;
+                width: 35px !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Dropdown Panel Styling */
+            .ui-selectonemenu-panel {
+                background: rgba(255, 255, 255, 0.95) !important;
+                backdrop-filter: blur(15px) !important;
+                border-radius: 12px !important;
+                border: 1px solid rgba(0,0,0,0.05) !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+            }
+
+            .no-underline { text-decoration: none !important; }
+
+            /* Right Panel Scrollbar */
+            .right-panel-scroll::-webkit-scrollbar { width: 8px; }
+            .right-panel-scroll::-webkit-scrollbar-track { background: #f8fafc; }
+            .right-panel-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+            .right-panel-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+            /* ]]> */
+        </style>
+    </h:head>
+
+    <h:body>
+        <div class="grid h-screen w-screen m-0 p-0">
+
+            <div class="hidden md:flex col-12 md:col-6 brand-section flex-column justify-content-center align-items-center relative p-8 h-screen">
+                <div class="glass-orb orb-1"></div>
+                <div class="glass-orb orb-2"></div>
+
+                <div class="relative z-1 text-center">
+                    <div class="inline-flex align-items-center justify-content-center bg-white-alpha-10 border-round-3xl p-3 mb-6 backdrop-blur-sm border-1 border-white-alpha-20 shadow-4">
+                        <i class="pi pi-bolt text-white text-4xl mr-3"></i>
+                        <h1 class="text-white text-5xl font-bold m-0 tracking-tight">Sakai-App</h1>
+                    </div>
+                    <div class="text-white-alpha-90">
+                        <h2 class="text-7xl font-bold line-height-1 mb-4">Start your <br/>journey.</h2>
+                        <p class="text-xl font-medium opacity-70">Join the next generation of Jakarta EE <br/>commerce infrastructure.</p>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-0 left-0 p-6 text-white-alpha-50 font-medium z-2">
+                    © 2026 Bro-Ecom Infrastructure
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6 flex flex-column align-items-center p-4 lg:p-8 bg-white h-screen overflow-y-auto right-panel-scroll relative">
+                
+                <div class="w-full max-w-28rem form-container my-auto py-6">
+
+                    <div class="mb-6">
+                        <h3 class="text-blue-600 font-bold mb-2 uppercase tracking-wider text-sm">Registration</h3>
+                        <h1 class="text-900 text-5xl font-bold mb-3 tracking-tighter">Create Account.</h1>
+                        <p class="text-600 font-medium">Already have an account? 
+                            <p:link outcome="login" value="Sign In" styleClass="text-blue-600 font-bold no-underline ml-1"/>
+                        </p>
+                    </div>
+
+                    <h:form id="signupForm" class="grid p-fluid">
+                        <p:growl id="messages" showDetail="true" />
+
+                        <div class="field col-12 md:col-6 mb-4 input-field-custom">
+                            <p:outputLabel for="fname" value="First Name" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                            <p:inputText id="fname" value="#{userBean.selectedUser.firstName}" required="true" placeholder="Ezio"/>
+                        </div>
+
+                        <div class="field col-12 md:col-6 mb-4 input-field-custom">
+                            <p:outputLabel for="lname" value="Last Name" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                            <p:inputText id="lname" value="#{userBean.selectedUser.lastName}" required="true" placeholder="Auditore"/>
+                        </div>
+
+                        <div class="field col-12 mb-4 input-field-custom">
+                            <p:outputLabel for="email" value="Work Email" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                            <p:inputText id="email" value="#{userBean.selectedUser.email}" required="true" placeholder="name@company.com">
+                                <f:validateRegex pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
+                            </p:inputText>
+                        </div>
+
+                        <div class="field col-12 mb-5 input-field-custom">
+                            <p:outputLabel for="pwd" value="Create Password" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                            <p:password id="pwd" value="#{userBean.selectedUser.passwordHash}" toggleMask="true" 
+                                        feedback="true" inline="true" required="true" placeholder="••••••••"
+                                        promptLabel="Security Level" weakLabel="Weak" goodLabel="Good" strongLabel="Enterprise Grade"/>
+                        </div>
+
+                        <div class="field col-12 mb-4 input-field-custom">
+                            <p:outputLabel for="role" value="Account Type" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                            <p:selectOneMenu id="role" value="#{userBean.selectedUser.userRole}" required="true">
+                                <f:selectItem itemLabel="Select a role" itemValue="" noSelectionOption="true"/>
+                                <f:selectItem itemLabel="Customer / Buyer" itemValue="CUSTOMER"/>
+                                <f:selectItem itemLabel="Logistics Manager" itemValue="LOGISTICS"/>
+                                <f:selectItem itemLabel="System Administrator" itemValue="ADMIN"/>
+                                <f:selectItem itemLabel="Vendor / Merchant" itemValue="VENDOR"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="field-checkbox col-12 mb-5">
+                            <p:selectBooleanCheckbox id="terms" required="true" styleClass="mr-2"/>
+                            <p:outputLabel for="terms" value="I agree to the Terms of Service and Privacy Policy" styleClass="text-600 text-sm"/>
+                        </div>
+
+                        <div class="col-12">
+                            <p:commandButton value="Create Account" 
+                                             action="#{userBean.saveUser()}" 
+                                             update="messages"
+                                             icon="pi pi-user-plus"
+                                             styleClass="bg-blue-600 border-none py-3 font-bold border-round-xl shadow-4 text-xl"/>
+                        </div>
+                    </h:form>
+
+                    <div class="mt-8 pt-6 border-top-1 surface-border text-center">
+                        <p class="text-500 text-sm font-medium mb-4 uppercase tracking-widest">Or Register With</p>
+                        <div class="flex gap-3 justify-content-center">
+                            <p:button icon="pi pi-google" styleClass="ui-button-outlined ui-button-secondary border-round-xl w-3rem h-3rem"/>
+                            <p:button icon="pi pi-github" styleClass="ui-button-outlined ui-button-secondary border-round-xl w-3rem h-3rem"/>
+                            <p:button icon="pi pi-microsoft" styleClass="ui-button-outlined ui-button-secondary border-round-xl w-3rem h-3rem"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </h:body>
+</html>

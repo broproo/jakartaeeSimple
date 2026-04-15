@@ -49,22 +49,20 @@
                 box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
             }
 
-            /* --- RIGHT-ALIGNED MOBILE SIDEBAR --- */
+            /* --- MOBILE SIDEBAR --- */
             .mobile-sidebar {
                 position: fixed;
                 top: 0;
-                right: -100%; /* Start off-screen to the right */
+                right: -100%;
                 width: 280px;
                 height: 100vh;
                 background: white;
                 z-index: 1100;
-                transition: right 0.4s var(--fluid-bezier); /* Transition right property */
+                transition: right 0.4s var(--fluid-bezier);
                 box-shadow: -20px 0 50px rgba(0,0,0,0.1);
             }
 
-            .mobile-sidebar.active {
-                right: 0; /* Slide in from right */
-            }
+            .mobile-sidebar.active { right: 0; }
 
             .menu-mask {
                 position: fixed;
@@ -80,16 +78,9 @@
                 transition: opacity 0.3s ease;
             }
 
-            .menu-mask.active {
-                display: block;
-                opacity: 1;
-            }
+            .menu-mask.active { display: block; opacity: 1; }
 
-            body.menu-open {
-                overflow: hidden;
-            }
-
-            /* --- HERO & COMPONENTS --- */
+            /* --- HERO & GLASS ORBS --- */
             .hero-mesh {
                 position: relative;
                 background: radial-gradient(circle at 15% 50%, rgba(195, 220, 250, 0.4), transparent 50%),
@@ -99,17 +90,23 @@
                 padding: 12rem 2rem 6rem 2rem;
             }
 
-            .hero-mesh::before {
-                content: '';
+            .glass-orb {
                 position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background-image: 
-                    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
-                background-size: 40px 40px;
-                z-index: 0;
-                mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
-                -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+                border-radius: 50%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0));
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                animation: float 8s ease-in-out infinite;
+                z-index: 1;
+            }
+
+            .orb-1 { width: 350px; height: 350px; top: 10%; left: -100px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(255,255,255,0)); }
+            .orb-2 { width: 450px; height: 450px; bottom: 10%; right: -150px; animation-delay: -4s; }
+            .orb-3 { width: 200px; height: 200px; top: 30%; right: 10%; animation-delay: -2s; opacity: 0.6; }
+
+            @keyframes float {
+                0%, 100% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-40px) rotate(8deg); }
             }
 
             .hero-dashboard-mockup {
@@ -121,13 +118,12 @@
                 border: 1px solid rgba(255, 255, 255, 0.8);
                 border-radius: 24px;
                 box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-                transform: perspective(1000px) rotateX(4deg) translateY(0);
+                transform: perspective(1000px) rotateX(4deg);
                 transition: transform 0.8s var(--fluid-bezier);
             }
-            .hero-dashboard-mockup:hover {
-                transform: perspective(1000px) rotateX(0deg) translateY(-10px);
-            }
+            .hero-dashboard-mockup:hover { transform: perspective(1000px) rotateX(0deg) translateY(-10px); }
 
+            /* --- BENTO & REVEAL --- */
             .bento-card {
                 background: white;
                 border-radius: 24px;
@@ -135,55 +131,35 @@
                 height: 100%;
                 border: 1px solid rgba(0,0,0,0.05);
                 transition: all 0.4s var(--fluid-bezier);
-                position: relative;
-                overflow: hidden;
             }
-            
-            .bento-card:hover {
-                transform: translateY(-8px) scale(1.01);
-                box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
-                border-color: rgba(59, 130, 246, 0.3);
-            }
+            .bento-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08); }
 
-            .reveal {
-                opacity: 0;
-                transform: translateY(40px);
-                transition: all 0.8s var(--fluid-bezier);
-            }
-            .reveal.active {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s var(--fluid-bezier); }
+            .reveal.active { opacity: 1; transform: translateY(0); }
             .delay-1 { transition-delay: 0.1s; }
             .delay-2 { transition-delay: 0.2s; }
-            .delay-3 { transition-delay: 0.3s; }
 
-            .no-underline { text-decoration: none !important; }
             .btn-fluid { transition: all 0.3s var(--fluid-bezier) !important; }
-            .btn-fluid:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.4) !important;
-            }
+            .btn-fluid:hover { transform: translateY(-3px); box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.4) !important; }
+            .no-underline { text-decoration: none !important; }
             /* ]]> */
         </style>
     </h:head>
 
     <h:body>
         <div id="mobile-mask" class="menu-mask" onclick="toggleMobileMenu()"></div>
+        
         <div id="mobile-sidebar" class="mobile-sidebar p-5 flex flex-column">
             <div class="flex align-items-center justify-content-between mb-5">
-                <p:commandButton icon="pi pi-times" styleClass="ui-button-rounded ui-button-flat text-900" 
-                                 type="button" onclick="toggleMobileMenu()"/>
+                <p:commandButton icon="pi pi-times" styleClass="ui-button-rounded ui-button-flat text-900" type="button" onclick="toggleMobileMenu()"/>
                 <span class="text-2xl font-bold text-900 tracking-tight">SAKAI</span>
             </div>
             <div class="flex flex-column gap-2 text-right">
-                <p:link href="#hero" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline hover:text-blue-600 border-bottom-1 border-100">Platform</p:link>
-                <p:link href="#features" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline hover:text-blue-600 border-bottom-1 border-100">Stack</p:link>
-                <p:link href="#deploy" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline hover:text-blue-600 border-bottom-1 border-100">Deploy</p:link>
+                <p:link href="#hero" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline">Platform</p:link>
+                <p:link href="#features" onclick="toggleMobileMenu()" styleClass="p-3 font-semibold text-xl text-700 no-underline">Stack</p:link>
             </div>
             <div class="mt-auto flex flex-column gap-3">
-                <p:button value="Sign In" icon="pi pi-lock" styleClass="ui-button-outlined w-full p-3 font-bold text-900" outcome="login"/>
-                <p:commandButton value="Start Project" styleClass="w-full p-3 font-bold bg-gray-900 border-none text-white"/>
+                <p:button value="Sign In" icon="pi pi-lock" styleClass="ui-button-outlined w-full p-3 font-bold" outcome="login"/>
             </div>
         </div>
 
@@ -194,23 +170,23 @@
                 </div>
                 <span class="text-2xl font-bold text-900 tracking-tight">SAKAI</span>
             </div>
-            
             <div class="hidden lg:flex align-items-center gap-2">
                 <p:link href="#hero" styleClass="p-3 font-semibold text-700 no-underline hover:text-blue-600 transition-colors">Platform</p:link>
                 <p:link href="#features" styleClass="p-3 font-semibold text-700 no-underline hover:text-blue-600 transition-colors">Stack</p:link>
-                <p:link href="#deploy" styleClass="p-3 font-semibold text-700 no-underline hover:text-blue-600 transition-colors">Deploy</p:link>
                 <p:button value="Sign In" icon="pi pi-lock" styleClass="ui-button-flat ml-4 font-bold text-900 btn-fluid" outcome="login"/>
-                <p:commandButton value="Start Project" styleClass="ml-2 font-bold shadow-4 border-round-xl btn-fluid bg-gray-900 border-none text-white hover:bg-gray-800"/>
+                <p:commandButton value="Start Project" styleClass="ml-2 font-bold shadow-4 border-round-xl btn-fluid bg-gray-900 border-none text-white"/>
             </div>
-
             <div class="lg:hidden">
-                <p:commandButton icon="pi pi-bars" type="button" onclick="toggleMobileMenu()"
-                                 styleClass="ui-button-rounded ui-button-flat text-900 text-2xl"/>
+                <p:commandButton icon="pi pi-bars" type="button" onclick="toggleMobileMenu()" styleClass="ui-button-rounded ui-button-flat text-900 text-2xl"/>
             </div>
         </div>
 
         <div class="landing-wrapper">
             <div id="hero" class="hero-mesh flex flex-column align-items-center justify-content-center text-center">
+                <div class="glass-orb orb-1 hidden md:block"></div>
+                <div class="glass-orb orb-2 hidden md:block"></div>
+                <div class="glass-orb orb-3"></div>
+
                 <div class="relative z-2 max-w-50rem mx-auto">
                     <div class="reveal active inline-flex align-items-center px-4 py-2 mb-5 border-round-3xl bg-white shadow-2 border-1 border-gray-200">
                         <span class="bg-blue-100 text-blue-700 font-bold px-2 py-1 border-round-lg text-xs mr-2">v8.0</span>
@@ -259,67 +235,31 @@
                             <div class="flex align-items-center justify-content-center bg-blue-50 border-round-2xl mb-5" style="width:60px;height:60px">
                                 <i class="pi pi-shield text-3xl text-blue-600"></i>
                             </div>
-                            <h3 class="text-900 text-3xl font-bold mb-3">Jakarta Security APIs</h3>
-                            <p class="text-600 line-height-3 text-lg mb-0">
-                                RESTful endpoints secured by design. Native integration with modern hashing interfaces.
-                            </p>
+                            <h3 class="text-900 text-3xl font-bold mb-3">Jakarta Security</h3>
+                            <p class="text-600 line-height-3 text-lg mb-0">RESTful endpoints secured by design with native integration.</p>
                         </div>
                     </div>
-                    
                     <div class="col-12 md:col flex-grow-1 reveal delay-1">
                         <div class="bento-card surface-900 text-white border-none">
                             <div class="flex align-items-center justify-content-center bg-white-alpha-10 border-round-2xl mb-5" style="width:60px;height:60px">
                                 <i class="pi pi-database text-3xl text-blue-300"></i>
                             </div>
                             <h3 class="text-white text-2xl font-bold mb-3">Derby Persistence</h3>
-                            <p class="text-gray-400 line-height-3 text-lg mb-0">
-                                Pre-configured JPA EntityManagers for advanced Apache Derby schemas.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col flex-grow-1 reveal delay-1">
-                        <div class="bento-card bg-blue-600 text-white border-none">
-                            <div class="flex align-items-center justify-content-center bg-white-alpha-20 border-round-2xl mb-5" style="width:60px;height:60px">
-                                <i class="pi pi-box text-3xl text-white"></i>
-                            </div>
-                            <h3 class="text-white text-2xl font-bold mb-3">Container Ready</h3>
-                            <p class="text-blue-100 line-height-3 text-lg mb-0">
-                                Built for local NetBeans debugging or Dockerized environments.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-12 md:col-7 reveal delay-2">
-                        <div class="bento-card">
-                            <div class="flex align-items-center justify-content-center bg-orange-50 border-round-2xl mb-5" style="width:60px;height:60px">
-                                <i class="pi pi-bolt text-3xl text-orange-500"></i>
-                            </div>
-                            <h3 class="text-900 text-3xl font-bold mb-3">PrimeFlex 3.3 Engine</h3>
-                            <p class="text-600 line-height-3 text-lg mb-0">
-                                Achieve absolute layout fluidity. Discard heavy custom CSS for responsive utility classes.
-                            </p>
+                            <p class="text-gray-400 line-height-3 text-lg mb-0">Optimized JPA EntityManagers for Derby schemas.</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-900 text-gray-100 py-8 px-4 lg:px-8">
-                <div class="flex flex-column align-items-center justify-content-center text-center mb-8 reveal">
-                    <h2 class="text-4xl font-bold text-white mb-4">Ready to push to production?</h2>
-                    <p:commandButton value="Migrate to GitHub" icon="pi pi-github" styleClass="p-4 text-lg font-bold bg-white text-900 border-none border-round-xl btn-fluid"/>
-                </div>
-                
-                <hr class="mb-6 border-top-1 border-gray-800"/>
-                
-                <div class="flex flex-column md:flex-row justify-content-between align-items-center text-gray-500 text-sm">
+            <div class="bg-gray-900 text-gray-500 py-8 px-4 lg:px-8">
+                <div class="flex flex-column md:flex-row justify-content-between align-items-center">
                     <div class="flex align-items-center mb-3 md:mb-0">
                         <div class="bg-blue-600 border-round flex align-items-center justify-content-center mr-2" style="width:24px;height:24px">
                             <i class="pi pi-bolt text-xs text-white"></i>
                         </div>
                         <span class="font-bold text-white uppercase tracking-wider">Sakai-App</span>
                     </div>
-                    <span>© 2026 Bro-Ecom Infrastructure. All rights reserved.</span>
+                    <span>© 2026 Bro-Ecom Infrastructure.</span>
                 </div>
             </div>
         </div>
@@ -328,43 +268,27 @@
             function toggleMobileMenu() {
                 const sidebar = document.getElementById('mobile-sidebar');
                 const mask = document.getElementById('mobile-mask');
-                const body = document.body;
-
                 sidebar.classList.toggle('active');
                 mask.classList.toggle('active');
-                body.classList.toggle('menu-open');
+                document.body.classList.toggle('menu-open');
             }
 
             document.addEventListener("DOMContentLoaded", function() {
-                // Sticky Header Logic
                 window.addEventListener('scroll', function() {
                     const header = document.getElementById('main-header');
-                    if (window.scrollY > 50) {
-                        header.classList.add('scrolled');
-                    } else {
-                        header.classList.remove('scrolled');
-                    }
+                    header.classList.toggle('scrolled', window.scrollY > 50);
                 });
 
-                // Scroll Reveal Logic
-                const revealElements = document.querySelectorAll('.reveal:not(.active)');
-                const revealOptions = {
-                    threshold: 0.15,
-                    rootMargin: "0px 0px -50px 0px"
-                };
-
-                const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('active');
                             observer.unobserve(entry.target);
                         }
                     });
-                }, revealOptions);
+                }, { threshold: 0.15 });
 
-                revealElements.forEach(el => {
-                    revealOnScroll.observe(el);
-                });
+                document.querySelectorAll('.reveal:not(.active)').forEach(el => observer.observe(el));
             });
         </script>
     </h:body>

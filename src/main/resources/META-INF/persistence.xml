@@ -3,5 +3,8 @@
   <!-- Define Persistence Unit -->
   <persistence-unit name="my_persistence_unit" transaction-type="JTA">
     <jta-data-source>java:app/ecomm</jta-data-source>
+    <properties>
+      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+    </properties>
   </persistence-unit>
 </persistence>

@@ -7,7 +7,9 @@
     <h:head>
         <title>Sakai | User Profile</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
         <link rel="stylesheet" href="https://unpkg.com/primeflex@3.3.1/primeflex.css"/>
+
         <style>
             /* <![CDATA[ */
             :root {
@@ -19,90 +21,119 @@
                 font-family: 'Inter', sans-serif; 
                 background-color: #fdfcfb;
                 color: #1e293b;
+                overflow-x: hidden;
             }
 
-            /* Consistent Mesh Background */
-            .profile-wrapper {
+            /* --- MESH BACKGROUND (From Landing) --- */
+            .profile-mesh-container {
+                position: relative;
                 min-height: 100vh;
                 background: radial-gradient(circle at 15% 15%, rgba(195, 220, 250, 0.4), transparent 40%),
                             radial-gradient(circle at 85% 85%, rgba(226, 209, 195, 0.4), transparent 40%);
-                padding-top: 100px;
+                padding-top: 120px; /* Space for sticky header */
+                padding-bottom: 100px;
             }
 
-            /* Header from Landing Page */
+            /* --- GLASS ORBS (From Landing) --- */
+            .glass-orb {
+                position: absolute;
+                border-radius: 50%;
+                background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0));
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                animation: float 8s ease-in-out infinite;
+                z-index: 0;
+            }
+            .orb-1 { width: 300px; height: 300px; top: 10%; left: -100px; background: rgba(59, 130, 246, 0.05); }
+            .orb-2 { width: 400px; height: 400px; bottom: 5%; right: -100px; animation-delay: -4s; }
+
+            @keyframes float {
+                0%, 100% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-40px) rotate(8deg); }
+            }
+
+            /* --- STICKY HEADER --- */
             .sticky-header {
                 position: fixed; top: 0; left: 0; width: 100%;
-                background: rgba(255, 255, 255, 0.6) !important; 
-                backdrop-filter: blur(20px);
+                background: rgba(255, 255, 255, 0.4) !important; 
+                backdrop-filter: blur(20px) saturate(180%);
                 z-index: 1000;
-                height: 75px;
-                border-bottom: 1px solid rgba(0,0,0,0.05);
+                height: 80px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+                transition: all 0.4s var(--fluid-bezier);
             }
 
-            /* Glassmorphism Bento Cards */
+            /* --- BENTO CARDS --- */
             .bento-card {
                 background: rgba(255, 255, 255, 0.7);
                 backdrop-filter: blur(15px);
                 border: 1px solid rgba(255, 255, 255, 0.8);
-                border-radius: 24px;
-                box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+                border-radius: 28px;
+                box-shadow: 0 10px 40px -15px rgba(0,0,0,0.05);
+                position: relative;
+                z-index: 1;
                 transition: transform 0.4s var(--fluid-bezier);
             }
-
-            .bento-card:hover {
-                transform: translateY(-5px);
-            }
-
-            /* Custom Styling for the Avatar Container */
-            .avatar-ring {
-                padding: 5px;
-                border: 2px solid #3b82f6;
-                border-radius: 50%;
-                display: inline-block;
-            }
+            .bento-card:hover { transform: translateY(-5px); }
 
             .input-field-custom .ui-inputfield {
                 background: rgba(255, 255, 255, 0.5) !important;
-                border-radius: 12px !important;
+                border-radius: 14px !important;
                 padding: 1rem !important;
-                border: 1px solid rgba(0,0,0,0.1) !important;
+                border: 1px solid rgba(0,0,0,0.08) !important;
                 transition: all 0.3s ease;
             }
-
             .input-field-custom .ui-inputfield:focus {
                 background: white !important;
                 border-color: #3b82f6 !important;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+                box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
             }
 
             .no-underline { text-decoration: none !important; }
+            .reveal { animation: revealUp 0.8s var(--fluid-bezier) forwards; opacity: 0; }
+            @keyframes revealUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
             /* ]]> */
         </style>
     </h:head>
     <h:body>
         <div class="flex align-items-center justify-content-between px-4 lg:px-8 sticky-header">
             <p:link href="landing.xhtml" styleClass="flex align-items-center no-underline">
-                <div class="bg-blue-600 border-round-xl flex align-items-center justify-content-center mr-3" style="width:38px;height:38px">
-                    <i class="pi pi-bolt text-white text-lg"></i>
+                <div class="bg-blue-600 border-round-xl flex align-items-center justify-content-center mr-3 shadow-4" style="width:42px;height:42px">
+                    <i class="pi pi-bolt text-white text-xl"></i>
                 </div>
-                <span class="text-xl font-bold text-900 tracking-tight">SAKAI</span>
+                <span class="text-2xl font-bold text-900 tracking-tight">SAKAI</span>
             </p:link>
             <div class="flex align-items-center gap-3">
-                <p:avatar icon="pi pi-user" shape="circle" styleClass="bg-gray-200"/>
+                <p:commandButton value="Dashboard" icon="pi pi-th-large" styleClass="ui-button-flat text-700 font-bold hidden md:block"/>
+                <p:avatar icon="pi pi-user" shape="circle" styleClass="bg-blue-100 text-blue-600 shadow-2"/>
             </div>
         </div>
 
-        <div class="profile-wrapper px-4 lg:px-8 pb-8">
-            <h:form id="mainForm">
+        <div class="profile-mesh-container px-4 lg:px-8">
+            <div class="glass-orb orb-1"></div>
+            <div class="glass-orb orb-2"></div>
+
+            <h:form id="profileForm" class="max-w-70rem mx-auto relative z-1">
+                
+                <div class="mb-6 reveal">
+                    <span class="bg-blue-100 text-blue-700 font-bold px-3 py-1 border-round-lg text-xs uppercase tracking-wider">Account Center</span>
+                    <h1 class="text-900 text-6xl font-bold mt-3 mb-2 tracking-tighter">Personal Settings.</h1>
+                    <p class="text-600 text-xl max-w-30rem line-height-3">Manage your identity and security preferences for the cargo management engine.</p>
+                </div>
+
                 <div class="grid">
-                    
-                    <div class="col-12 lg:col-4">
+                    <div class="col-12 lg:col-4 reveal" style="animation-delay: 0.1s">
                         <div class="bento-card p-5 text-center mb-4">
-                            <div class="avatar-ring mb-4">
+                            <div class="relative inline-block mb-4">
                                 <p:avatar label="#{userBeanP.currentUser.firstName.substring(0,1)}" 
                                           size="xlarge" shape="circle" 
-                                          styleClass="bg-blue-600 text-white shadow-4" 
-                                          style="width:110px; height:110px; font-size: 3rem"/>
+                                          styleClass="bg-blue-600 text-white shadow-6" 
+                                          style="width:120px; height:120px; font-size: 3.5rem"/>
+                                <p:commandButton icon="pi pi-pencil" styleClass="ui-button-rounded bg-white text-900 border-1 border-200 absolute shadow-2" 
+                                                 style="bottom: 0; right: 0; width: 36px; height: 36px;"/>
                             </div>
                             
                             <h2 class="text-900 font-bold mb-1 text-3xl tracking-tight">
@@ -110,40 +141,43 @@
                             </h2>
                             <p class="text-600 font-medium mb-4">#{userSession.currentUser.email}</p>
                             
-                            <div class="flex align-items-center justify-content-center gap-2 mb-5">
-                                <span class="bg-blue-100 text-blue-700 font-bold px-3 py-1 border-round-lg text-xs">
-                                    #{userSession.currentUser.userRole}
-                                </span>
+                            <div class="flex align-items-center justify-content-center gap-2 mb-4">
+                                <span class="bg-blue-600 text-white font-bold px-3 py-1 border-round-lg text-xs uppercase shadow-2">#{userSession.currentUser.userRole}</span>
                                 <span class="bg-green-100 text-green-700 font-bold px-3 py-1 border-round-lg text-xs uppercase">Verified</span>
                             </div>
 
-                            <div class="flex flex-column gap-2">
-                                <p:commandButton value="Edit Profile Image" icon="pi pi-camera" styleClass="ui-button-outlined ui-button-secondary border-round-xl"/>
-                                <p:commandButton value="View Activity" icon="pi pi-list" styleClass="ui-button-flat text-700"/>
+                            <div class="border-top-1 surface-border pt-4 mt-2">
+                                <div class="flex justify-content-between text-sm mb-2">
+                                    <span class="text-600">Account Status</span>
+                                    <span class="text-900 font-bold">Active</span>
+                                </div>
+                                <div class="flex justify-content-between text-sm">
+                                    <span class="text-600">Member Since</span>
+                                    <span class="text-900 font-bold">April 2026</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bento-card p-4 bg-gray-900 text-white border-none mb-4">
+                        <div class="bento-card p-4 bg-gray-900 text-white border-none shadow-8">
                             <div class="flex align-items-center mb-3">
-                                <i class="pi pi-shopping-cart mr-2 text-blue-400"></i>
-                                <span class="font-bold">E-commerce Summary</span>
+                                <i class="pi pi-shield mr-2 text-blue-400"></i>
+                                <span class="font-bold">Security Score</span>
                             </div>
-                            <div class="flex justify-content-between text-sm text-gray-400">
-                                <span>Total Orders</span>
-                                <span class="text-white font-bold">12</span>
+                            <div class="flex align-items-center gap-3">
+                                <div class="flex-1 bg-white-alpha-10 border-round overflow-hidden" style="height: 8px">
+                                    <div class="bg-blue-500 h-full w-8" style="width: 85%"></div>
+                                </div>
+                                <span class="font-bold text-sm">85%</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 lg:col-8">
+                    <div class="col-12 lg:col-8 reveal" style="animation-delay: 0.2s">
                         <div class="bento-card p-6">
-                            <div class="flex align-items-center justify-content-between mb-6">
-                                <div>
-                                    <h3 class="text-900 font-bold text-3xl mb-1 tracking-tight">Profile Settings</h3>
-                                    <p class="text-600 m-0">Update your personal information and security.</p>
-                                </div>
-                                <i class="pi pi-cog text-4xl text-gray-200"></i>
-                            </div>
+                            <h3 class="text-900 font-bold text-2xl mb-5 tracking-tight flex align-items-center">
+                                <i class="pi pi-user mr-3 text-blue-600"></i>
+                                Basic Information
+                            </h3>
                             
                             <div class="grid p-fluid">
                                 <div class="field col-12 md:col-6 input-field-custom">
@@ -157,37 +191,46 @@
                                 </div>
 
                                 <div class="field col-12 input-field-custom">
-                                    <p:outputLabel for="email" value="Account Email" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                                    <p:outputLabel for="email" value="Email Address" styleClass="text-sm font-bold text-700 mb-2 block"/>
                                     <p:inputText id="email" value="#{userSession.currentUser.email}" readonly="true" styleClass="opacity-60"/>
                                 </div>
+                            </div>
 
-                                <div class="field col-12 mt-4 mb-4">
-                                    <div class="surface-100 p-4 border-round-2xl border-1 border-200 flex align-items-center justify-content-between">
-                                        <div class="flex align-items-center">
-                                            <div class="bg-blue-600 border-round-lg p-2 mr-3">
-                                                <i class="pi pi-shield text-white"></i>
-                                            </div>
-                                            <div>
-                                                <span class="block font-bold text-900">Two-Factor Authentication</span>
-                                                <span class="text-sm text-600">Secure your account with 2FA.</span>
-                                            </div>
+                            <div class="border-top-1 surface-border my-5"></div>
+
+                            <h3 class="text-900 font-bold text-2xl mb-5 tracking-tight flex align-items-center">
+                                <i class="pi pi-lock mr-3 text-blue-600"></i>
+                                Privacy &amp; Security
+                            </h3>
+
+                            <div class="field col-12 p-0 mb-4">
+                                <div class="surface-100 p-4 border-round-2xl border-1 border-200 flex align-items-center justify-content-between">
+                                    <div class="flex align-items-center">
+                                        <div class="bg-blue-600 border-round-lg p-2 mr-3 shadow-2">
+                                            <i class="pi pi-verified text-white"></i>
                                         </div>
-                                        <p:toggleSwitch  />
+                                        <div>
+                                            <span class="block font-bold text-900">Two-Factor Authentication</span>
+                                            <span class="text-sm text-600">Add an extra layer of security to your account.</span>
+                                        </div>
                                     </div>
+                                    <p:toggleSwitch  />
                                 </div>
+                            </div>
 
+                            <div class="grid p-fluid">
                                 <div class="field col-12 md:col-6 input-field-custom">
-                                    <p:outputLabel for="pwd" value="Update Password" styleClass="text-sm font-bold text-700 mb-2 block"/>
+                                    <p:outputLabel for="pwd" value="New Password" styleClass="text-sm font-bold text-700 mb-2 block"/>
                                     <p:password id="pwd" feedback="false" toggleMask="true" placeholder="••••••••"/>
                                 </div>
                             </div>
 
-                            <div class="flex flex-column sm:flex-row justify-content-end mt-6 gap-3">
-                                <p:commandButton value="Discard" styleClass="ui-button-flat text-700 font-bold p-3"/>
-                                <p:commandButton value="Save Profile" 
+                            <div class="flex flex-column sm:flex-row justify-content-end mt-6 gap-3 pt-4 border-top-1 surface-border">
+                                <p:commandButton value="Cancel" styleClass="ui-button-flat text-700 font-bold p-3 px-5"/>
+                                <p:commandButton value="Update Account" 
                                                  action="#{userBeanP.updateProfile}" 
                                                  icon="pi pi-check-circle" 
-                                                 styleClass="bg-blue-600 border-none px-6 py-3 font-bold border-round-xl shadow-4"/>
+                                                 styleClass="bg-blue-600 border-none px-6 py-3 font-bold border-round-2xl shadow-6"/>
                             </div>
                         </div>
                     </div>
